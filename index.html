@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo Nacional de Metadatos Geográficos de Uruguay</title>
+    
+    <!-- Hojas de estilo externas (Leaflet CSS) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    
+    <!-- Hoja de estilo principal -->
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+    <!-- Encabezado Principal -->
+    <header class="encabezado-principal">
+        <div class="contenedor-header">
+            <h1 class="titulo-sitio">Catálogo Nacional de Metadatos Geográficos</h1>
+            <p class="subtitulo-sitio">IDE Uruguay — Infraestructura de Datos Espaciales</p>
+        </div>
+    </header>
+
+    <!-- Buscador Flotante / Barra Superior -->
+    <section class="seccion-buscador">
+        <div class="buscador-flotante">
+            <input 
+                type="text" 
+                id="entrada-busqueda" 
+                class="campo-busqueda" 
+                placeholder="Buscar por título, palabra clave o resumen..."
+                aria-label="Buscar metadatos"
+            >
+            <button id="boton-limpiar-busqueda" class="boton-limpiar" aria-label="Limpiar búsqueda">✕</button>
+        </div>
+    </section>
+
+    <!-- Layout Principal (Panel Lateral + Contenido) -->
+    <div class="contenedor-principal">
+
+        <!-- Panel Lateral de Filtros -->
+        <aside class="barra-lateral">
+            <h2 class="titulo-seccion-filtros">Filtros</h2>
+
+            <!-- Filtro por Tipo de Servicio -->
+            <div class="grupo-filtro">
+                <h3>Tipo de Servicio</h3>
+                <div class="opciones-interrupters">
+                    <label class="opcion-checkbox">
+                        <input type="checkbox" class="filtro-tipo" value="WMS" checked>
+                        <span class="etiqueta-checkbox">WMS (Imágenes / Mapas)</span>
+                    </label>
+                    <label class="opcion-checkbox">
+                        <input type="checkbox" class="filtro-tipo" value="WFS" checked>
+                        <span class="etiqueta-checkbox">WFS (Vectores)</span>
+                    </label>
+                    <label class="opcion-checkbox">
+                        <input type="checkbox" class="filtro-tipo" value="WMTS" checked>
+                        <span class="etiqueta-checkbox">WMTS (Teselas)</span>
+                    </label>
+                    <label class="opcion-checkbox">
+                        <input type="checkbox" class="filtro-tipo" value="Descarga Directa" checked>
+                        <span class="etiqueta-checkbox">Descargas Directas</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Filtro por Institución -->
+            <div class="grupo-filtro">
+                <h3>Institución / Organismo</h3>
+                <select id="selector-institucion" class="combobox">
+                    <option value="">Todas las instituciones</option>
+                </select>
+            </div>
+
+            <!-- Filtro por Palabras Clave (Pills/Etiquetas) -->
+            <div class="grupo-filtro">
+                <h3>Temáticas frecuentes</h3>
+                <div id="contenedor-etiquetas" class="contenedor-pills">
+                    <!-- Se generan dinámicamente desde JS -->
+                </div>
+            </div>
+
+            <!-- Botón Restablecer Filtros -->
+            <button id="boton-reset-filtros" class="boton-secundario">Restablecer filtros</button>
+        </aside>
+
+        <!-- Área de Contenido Principal -->
+        <main class="contenido-catalogo">
+
+            <!-- Panel Cartográfico (Fase 3) -->
+            <section class="seccion-mapa">
+                <div class="encabezado-mapa">
+                    <h2>Visor Geográfico</h2>
+                    <label class="opcion-checkbox espacial">
+                        <input type="checkbox" id="filtro-area-visible">
+                        <span class="etiqueta-checkbox">Filtrar según área visible en el mapa</span>
+                    </label>
+                </div>
+                <div id="mapa" class="mapa-contenedor"></div>
+            </section>
+
+            <!-- Barra de Información de Resultados -->
+            <div class="barra-resultados">
+                <span id="contador-resultados">Cargando metadatos...</span>
+            </div>
+
+            <!-- Grilla/Listado de Tarjetas -->
+            <section id="contenedor-tarjetas" class="grilla-tarjetas">
+                <!-- Se poblará dinámicamente con JS -->
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- Scripts de la Aplicación -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <script src="js/mapa.js"></script>
+    <script src="js/buscador.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,350 @@
+/* ==========================================================================
+   Variables Globales y Reset
+   ========================================================================== */
+:root {
+    --color-primario: #004d40;
+    --color-primario-hover: #00332c;
+    --color-secundario: #0288d1;
+    --color-fondo: #f4f6f8;
+    --color-superficie: #ffffff;
+    --color-texto: #212121;
+    --color-texto-secundario: #666666;
+    --color-borde: #e0e0e0;
+    
+    /* Tipografía */
+    --fuente-principal: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    
+    /* Sombras y Bordes */
+    --sombra-tarjeta: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --sombra-elevada: 0 4px 12px rgba(0, 0, 0, 0.12);
+    --radio-borde: 8px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--fuente-principal);
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    line-height: 1.5;
+}
+
+/* ==========================================================================
+   Encabezado Principal
+   ========================================================================== */
+.encabezado-principal {
+    background-color: var(--color-primario);
+    color: #ffffff;
+    padding: 1.5rem 2rem;
+    text-align: center;
+}
+
+.titulo-sitio {
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.subtitulo-sitio {
+    font-size: 0.95rem;
+    opacity: 0.9;
+    margin-top: 0.25rem;
+}
+
+/* ==========================================================================
+   Buscador Flotante
+   ========================================================================== */
+.seccion-buscador {
+    max-width: 1200px;
+    margin: -1.25rem auto 1rem auto;
+    padding: 0 1rem;
+    position: relative;
+    z-index: 10;
+}
+
+.buscador-flotante {
+    display: flex;
+    align-items: center;
+    background-color: var(--color-superficie);
+    border-radius: var(--radio-borde);
+    box-shadow: var(--sombra-elevada);
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--color-borde);
+}
+
+.campo-busqueda {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    padding: 0.5rem;
+    color: var(--color-texto);
+}
+
+.boton-limpiar {
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    color: var(--color-texto-secundario);
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+}
+
+.boton-limpiar:hover {
+    color: var(--color-texto);
+}
+
+/* ==========================================================================
+   Layout Principal (Panel Lateral + Contenido)
+   ========================================================================== */
+.contenedor-principal {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 1.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+/* ==========================================================================
+   Barra Lateral de Filtros
+   ========================================================================== */
+.barra-lateral {
+    background-color: var(--color-superficie);
+    border-radius: var(--radio-borde);
+    padding: 1.25rem;
+    box-shadow: var(--sombra-tarjeta);
+    height: fit-content;
+    border: 1px solid var(--color-borde);
+}
+
+.titulo-seccion-filtros {
+    font-size: 1.2rem;
+    border-bottom: 2px solid var(--color-fondo);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.grupo-filtro {
+    margin-bottom: 1.5rem;
+}
+
+.grupo-filtro h3 {
+    font-size: 0.95rem;
+    color: var(--color-texto-secundario);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.opciones-interrupters {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.opcion-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.combobox {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid var(--color-borde);
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.contenedor-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.pill-etiqueta {
+    background-color: var(--color-fondo);
+    border: 1px solid var(--color-borde);
+    border-radius: 12px;
+    padding: 0.25rem 0.6rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pill-etiqueta.activa,
+.pill-etiqueta:hover {
+    background-color: var(--color-primario);
+    color: #ffffff;
+    border-color: var(--color-primario);
+}
+
+.boton-secundario {
+    width: 100%;
+    padding: 0.6rem;
+    background-color: transparent;
+    border: 1px solid var(--color-primario);
+    color: var(--color-primario);
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.boton-secundario:hover {
+    background-color: var(--color-primario);
+    color: #ffffff;
+}
+
+/* ==========================================================================
+   Área del Mapa Interactivo
+   ========================================================================== */
+.seccion-mapa {
+    background-color: var(--color-superficie);
+    border-radius: var(--radio-borde);
+    padding: 1rem;
+    box-shadow: var(--sombra-tarjeta);
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--color-borde);
+}
+
+.encabezado-mapa {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.encabezado-mapa h2 {
+    font-size: 1.1rem;
+}
+
+.mapa-contenedor {
+    height: 320px;
+    width: 100%;
+    border-radius: 4px;
+    z-index: 1;
+}
+
+/* ==========================================================================
+   Grilla de Tarjetas
+   ========================================================================== */
+.barra-resultados {
+    margin-bottom: 1rem;
+    font-weight: 600;
+    color: var(--color-texto-secundario);
+}
+
+.grilla-tarjetas {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.25rem;
+}
+
+.tarjeta-metadato {
+    background-color: var(--color-superficie);
+    border-radius: var(--radio-borde);
+    padding: 1.25rem;
+    box-shadow: var(--sombra-tarjeta);
+    border: 1px solid var(--color-borde);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.tarjeta-metadato:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--sombra-elevada);
+}
+
+.encabezado-tarjeta {
+    margin-bottom: 0.75rem;
+}
+
+.titulo-tarjeta {
+    font-size: 1.05rem;
+    color: var(--color-primario);
+    margin-bottom: 0.5rem;
+}
+
+.insitucion-tarjeta {
+    font-size: 0.8rem;
+    color: var(--color-texto-secundario);
+    font-weight: 600;
+}
+
+.resumen-tarjeta {
+    font-size: 0.88rem;
+    color: var(--color-texto);
+    margin-bottom: 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.resumen-tarjeta.desplegado {
+    -webkit-line-clamp: unset;
+}
+
+.etiquetas-servicio {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.badge-servicio {
+    font-size: 0.75rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.badge-wms { background-color: #e3f2fd; color: #1565c0; }
+.badge-wfs { background-color: #e8f5e9; color: #2e7d32; }
+.badge-wmts { background-color: #f3e5f5; color: #7b1fa2; }
+.badge-descarga { background-color: #fff3e0; color: #e65100; }
+.badge-otros { background-color: #eceff1; color: #455a64; }
+
+.acciones-tarjeta {
+    display: flex;
+    gap: 0.5rem;
+    border-top: 1px solid var(--color-borde);
+    padding-top: 0.75rem;
+}
+
+.boton-accion {
+    flex: 1;
+    padding: 0.4rem;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    border: 1px solid var(--color-borde);
+    background-color: var(--color-superficie);
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    color: var(--color-texto);
+}
+
+.boton-accion:hover {
+    background-color: var(--color-fondo);
+}
+
+/* ==========================================================================
+   Diseño Adaptativo (Responsive)
+   ========================================================================== */
+@media (max-width: 900px) {
+    .contenedor-principal {
+        grid-template-columns: 1fr;
+    }
+}
