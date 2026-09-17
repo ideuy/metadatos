@@ -5,6 +5,9 @@
     --color-primario: #004d40;
     --color-primario-hover: #00332c;
     --color-secundario: #0288d1;
+    --color-secundario-hover: #0277bd;
+    --color-peligro: #d32f2f;
+    --color-peligro-hover: #b71c1c;
     --color-fondo: #f4f6f8;
     --color-superficie: #ffffff;
     --color-texto: #212121;
@@ -46,6 +49,7 @@ body {
 .titulo-sitio {
     font-size: 1.75rem;
     font-weight: 700;
+    letter-spacing: -0.5px;
 }
 
 .subtitulo-sitio {
@@ -87,14 +91,18 @@ body {
 .boton-limpiar {
     background: none;
     border: none;
-    font-size: 1.1rem;
+    font-size: 1.25rem;
+    line-height: 1;
     color: var(--color-texto-secundario);
     cursor: pointer;
-    padding: 0.25rem 0.5rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 50%;
+    transition: background 0.2s;
 }
 
 .boton-limpiar:hover {
     color: var(--color-texto);
+    background-color: var(--color-fondo);
 }
 
 /* ==========================================================================
@@ -152,6 +160,12 @@ body {
     gap: 0.5rem;
     font-size: 0.9rem;
     cursor: pointer;
+    user-select: none;
+}
+
+.opcion-checkbox.espacial {
+    font-weight: 600;
+    color: var(--color-primario);
 }
 
 .combobox {
@@ -161,6 +175,7 @@ body {
     border: 1px solid var(--color-borde);
     font-size: 0.9rem;
     outline: none;
+    background-color: var(--color-superficie);
 }
 
 .contenedor-pills {
@@ -195,7 +210,7 @@ body {
     border-radius: 4px;
     cursor: pointer;
     font-weight: 600;
-    transition: background 0.2s;
+    transition: background 0.2s, color 0.2s;
 }
 
 .boton-secundario:hover {
@@ -220,6 +235,8 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
 .encabezado-mapa h2 {
@@ -227,10 +244,24 @@ body {
 }
 
 .mapa-contenedor {
-    height: 320px;
+    height: 340px;
     width: 100%;
     border-radius: 4px;
     z-index: 1;
+    border: 1px solid var(--color-borde);
+}
+
+.barra-estado-mapa {
+    margin-top: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background-color: #e0f2f1;
+    border: 1px solid #80cbc4;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: #004d40;
 }
 
 /* ==========================================================================
@@ -244,7 +275,7 @@ body {
 
 .grilla-tarjetas {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1.25rem;
 }
 
@@ -273,9 +304,10 @@ body {
     font-size: 1.05rem;
     color: var(--color-primario);
     margin-bottom: 0.5rem;
+    line-height: 1.3;
 }
 
-.insitucion-tarjeta {
+.institucion-tarjeta {
     font-size: 0.8rem;
     color: var(--color-texto-secundario);
     font-weight: 600;
@@ -289,6 +321,7 @@ body {
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    line-height: 1.4;
 }
 
 .resumen-tarjeta.desplegado {
@@ -318,32 +351,72 @@ body {
 
 .acciones-tarjeta {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.4rem;
     border-top: 1px solid var(--color-borde);
     padding-top: 0.75rem;
+    flex-wrap: wrap;
 }
 
 .boton-accion {
-    flex: 1;
-    padding: 0.4rem;
-    font-size: 0.8rem;
+    flex: 1 1 auto;
+    min-width: 80px;
+    padding: 0.45rem 0.6rem;
+    font-size: 0.78rem;
+    font-weight: 500;
     border-radius: 4px;
     border: 1px solid var(--color-borde);
     background-color: var(--color-superficie);
     cursor: pointer;
     text-align: center;
-    text-decoration: none;
     color: var(--color-texto);
+    transition: background 0.15s, border-color 0.15s;
 }
 
 .boton-accion:hover {
     background-color: var(--color-fondo);
+    border-color: #bbb;
+}
+
+.boton-accion.boton-destacado {
+    background-color: #e0f2f1;
+    color: #004d40;
+    border-color: #80cbc4;
+    font-weight: 600;
+}
+
+.boton-accion.boton-destacado:hover {
+    background-color: #b2dfdb;
+}
+
+.boton-accion-peligro {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.78rem;
+    border-radius: 4px;
+    border: 1px solid var(--color-peligro);
+    background-color: var(--color-peligro);
+    color: #ffffff;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.boton-accion-peligro:hover {
+    background-color: var(--color-peligro-hover);
+}
+
+.sin-resultados, .mensaje-error {
+    grid-column: 1 / -1;
+    padding: 2rem;
+    text-align: center;
+    background-color: var(--color-superficie);
+    border-radius: var(--radio-borde);
+    border: 1px dashed var(--color-borde);
+    color: var(--color-texto-secundario);
 }
 
 /* ==========================================================================
    Diseño Adaptativo (Responsive)
    ========================================================================== */
-@media (max-width: 900px) {
+@media (max-width: 960px) {
     .contenedor-principal {
         grid-template-columns: 1fr;
     }

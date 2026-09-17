@@ -1,5 +1,31 @@
+# Entorno virtual
 .venv/
+venv/
+env/
+
+# Python cache y archivos de bytecode
 __pycache__/
-*.pyc
-.DS_Store
+*.py[cod]
+*.so
+
+# Archivos de distribución
+dist/
+build/
+
+# Editor y IDEs
 .vscode/
+.idea/
+*.swp
+
+# Logs
+logs/
+*.log
+
+# Carpetas
+dumps/
+.agents/
+
+
+# Otros
+.DS_Store
+generar_dump.py

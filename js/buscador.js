@@ -1,6 +1,6 @@
 /**
  * Módulo de Búsqueda y Filtros (buscador.js)
- * Gestiona el filtrado interactivo en tiempo real del catálogo de metadatos.
+ * Gestiona el filtrado interactivo multi-criterio en tiempo real del catálogo de metadatos.
  */
 
 // Referencias a los elementos del DOM
@@ -10,12 +10,13 @@ let selectorInstitucion;
 let contenedorEtiquetas;
 let botonReset;
 let checkboxesTipos;
+let casillaFiltroEspacial;
 
 // Copia local del catálogo completo para realizar filtrados
 let catalogoBase = [];
 
 /**
- * Inicializa los listeners de eventos y la carga de los controles dinámicos de filtro.
+ * Inicializa los listeners de eventos y los controles de filtro.
  * @param {Array} datosCatalogo - Lista completa de metadatos obtenida desde el servidor.
  */
 function inicializarBuscador(datosCatalogo) {
@@ -28,6 +29,7 @@ function inicializarBuscador(datosCatalogo) {
     contenedorEtiquetas = document.getElementById('contenedor-etiquetas');
     botonReset = document.getElementById('boton-reset-filtros');
     checkboxesTipos = document.querySelectorAll('.filtro-tipo');
+    casillaFiltroEspacial = document.getElementById('filtro-area-visible');
 
     // Poblar las opciones de los combos/pills basados en el contenido real del JSON
     poblarSelectorInstituciones();
@@ -53,20 +55,24 @@ function inicializarBuscador(datosCatalogo) {
         checkbox.addEventListener('change', ejecutarFiltrosCombinados);
     });
 
+    if (casillaFiltroEspacial) {
+        casillaFiltroEspacial.addEventListener('change', ejecutarFiltrosCombinados);
+    }
+
     if (botonReset) {
         botonReset.addEventListener('click', restablecerFiltros);
     }
 }
 
 /**
- * Extrae las instituciones únicas del catálogo y las agrega al `<select>`.
+ * Extrae las instituciones únicas del catálogo y las agrega al selector.
  */
 function poblarSelectorInstituciones() {
     if (!selectorInstitucion) return;
 
     const institucionesUnicas = [...new Set(catalogoBase.map(item => item.institucion))]
         .filter(Boolean)
-        .sort();
+        .sort((a, b) => a.localeCompare(b, 'es'));
 
     // Limpiar opciones previas manteniendo la primera ("Todas")
     selectorInstitucion.innerHTML = '<option value="">Todas las instituciones</option>';
@@ -122,8 +128,8 @@ function poblarEtiquetasTematicas() {
 }
 
 /**
- * Aplica simultáneamente todos los criterios de filtro (Búsqueda textual,
- * Checkboxes de tipo de servicio, Combobox de institución y Etiquetas seleccionadas).
+ * Aplica simultáneamente todos los criterios de filtro (Texto,
+ * Tipos de servicio, Institución, Temáticas y Extensión espacial visible en mapa).
  */
 function ejecutarFiltrosCombinados() {
     const textoConsulta = campoBusqueda ? campoBusqueda.value.toLowerCase().trim() : '';
@@ -138,29 +144,40 @@ function ejecutarFiltrosCombinados() {
     const etiquetasActivas = Array.from(document.querySelectorAll('.pill-etiqueta.activa'))
         .map(pill => pill.dataset.palabra);
 
+    // Estado del filtro espacial
+    const filtrarPorEspacio = casillaFiltroEspacial && casillaFiltroEspacial.checked;
+
     // Filtrado de la lista base
     const resultadoFiltrado = catalogoBase.filter(metadato => {
         // 1. Filtro por Búsqueda Libre (Título, Resumen o Palabras Clave)
         const coincideTexto = !textoConsulta || 
-            metadato.titulo.toLowerCase().includes(textoConsulta) ||
-            metadato.resumen.toLowerCase().includes(textoConsulta) ||
-            metadato.palabras_clave.some(kw => kw.toLowerCase().includes(textoConsulta));
+            (metadato.titulo && metadato.titulo.toLowerCase().includes(textoConsulta)) ||
+            (metadato.resumen && metadato.resumen.toLowerCase().includes(textoConsulta)) ||
+            (Array.isArray(metadato.palabras_clave) && metadato.palabras_clave.some(kw => kw.toLowerCase().includes(textoConsulta)));
 
         // 2. Filtro por Institución
         const coincideInstitucion = !institucionSeleccionada || 
             metadato.institucion === institucionSeleccionada;
 
-        // 3. Filtro por Tipos de Servicio (al menos una coincidencia)
+        // 3. Filtro por Tipos de Servicio
         const coincideTipoServicio = tiposSeleccionados.length === 0 || 
-            metadato.tipos_servicio.some(tipo => tiposSeleccionados.includes(tipo));
+            (Array.isArray(metadato.tipos_servicio) && metadato.tipos_servicio.some(tipo => tiposSeleccionados.includes(tipo)));
 
         // 4. Filtro por Etiquetas Temáticas seleccionadas
         const coincideEtiquetas = etiquetasActivas.length === 0 || 
-            etiquetasActivas.every(etiqueta => 
+            (Array.isArray(metadato.palabras_clave) && etiquetasActivas.every(etiqueta => 
                 metadato.palabras_clave.some(kw => kw.toLowerCase().includes(etiqueta))
-            );
+            ));
 
-        return coincideTexto && coincideInstitucion && coincideTipoServicio && coincideEtiquetas;
+        // 5. Filtro Espacial (área visible del mapa)
+        let coincideEspacial = true;
+        if (filtrarPorEspacio) {
+            if (typeof intersecaAreaVisible === 'function') {
+                coincideEspacial = intersecaAreaVisible(metadato.bbox);
+            }
+        }
+
+        return coincideTexto && coincideInstitucion && coincideTipoServicio && coincideEtiquetas && coincideEspacial;
     });
 
     // Actualizar la grilla de tarjetas definida en app.js
@@ -168,7 +185,7 @@ function ejecutarFiltrosCombinados() {
         renderizarTarjetas(resultadoFiltrado);
     }
 
-    // Sincronizar actualización con el mapa si está inicializado
+    // Sincronizar actualización con los rectángulos del mapa
     if (typeof actualizarCapasMapa === 'function') {
         actualizarCapasMapa(resultadoFiltrado);
     }
@@ -180,6 +197,7 @@ function ejecutarFiltrosCombinados() {
 function restablecerFiltros() {
     if (campoBusqueda) campoBusqueda.value = '';
     if (selectorInstitucion) selectorInstitucion.value = '';
+    if (casillaFiltroEspacial) casillaFiltroEspacial.checked = false;
 
     checkboxesTipos.forEach(chk => { chk.checked = true; });
 

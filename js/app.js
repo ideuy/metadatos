@@ -76,19 +76,30 @@ function obtenerClaseBadge(tipoServicio) {
  * Genera el HTML de una tarjeta individual a partir de un metadato.
  */
 function crearHtmlTarjeta(metadato) {
-    const badgesServicio = metadato.tipos_servicio.map(tipo => 
+    const tipos = Array.isArray(metadato.tipos_servicio) ? metadato.tipos_servicio : [];
+    const badgesServicio = tipos.map(tipo => 
         `<span class="badge-servicio ${obtenerClaseBadge(tipo)}">${tipo}</span>`
     ).join('');
 
-    const enlaceDistribucion = metadato.distribuciones && metadato.distribuciones.length > 0 
-        ? metadato.distribuciones[0].url 
-        : '#';
+    // Obtener enlace de distribución principal
+    const tieneDistribuciones = Array.isArray(metadato.distribuciones) && metadato.distribuciones.length > 0;
+    const enlaceDistribucion = tieneDistribuciones ? metadato.distribuciones[0].url : '#';
+
+    // Buscar si existe distribución WMS para previsualización directa
+    const distribucionWms = tieneDistribuciones 
+        ? metadato.distribuciones.find(d => d.tipo === 'WMS' || (d.protocolo && d.protocolo.includes('WMS')) || (d.url && d.url.toLowerCase().includes('wms')))
+        : null;
+
+    const urlWms = distribucionWms ? distribucionWms.url : '';
+
+    const bboxJson = metadato.bbox ? JSON.stringify(metadato.bbox) : 'null';
+    const tituloEscapado = (metadato.titulo || 'Capa').replace(/'/g, "\\'");
 
     return `
         <article class="tarjeta-metadato" id="${metadato.id}">
             <div class="encabezado-tarjeta">
-                <h3 class="titulo-tarjeta">${metadato.titulo}</h3>
-                <span class="insitucion-tarjeta">${metadato.institucion}</span>
+                <h3 class="titulo-tarjeta">${metadato.titulo || 'Sin título'}</h3>
+                <span class="institucion-tarjeta">${metadato.institucion || 'Institución no especificada'}</span>
             </div>
 
             <div class="etiquetas-servicio">
@@ -96,19 +107,24 @@ function crearHtmlTarjeta(metadato) {
             </div>
 
             <p class="resumen-tarjeta" id="resumen-${metadato.id}">
-                ${metadato.resumen}
+                ${metadato.resumen || 'Sin resumen disponible.'}
             </p>
 
             <div class="acciones-tarjeta">
-                <button class="boton-accion" onclick="alternarVisibilidadResumen('${metadato.id}')">
+                <button class="boton-accion" onclick="alternarVisibilidadResumen('${metadato.id}')" title="Ver descripción completa">
                     Ver más
                 </button>
-                <button class="boton-accion" onclick="copiarUrlServicio('${enlaceDistribucion}')">
+                <button class="boton-accion" onclick="copiarUrlServicio('${enlaceDistribucion}')" title="Copiar URL del recurso">
                     Copiar Enlace
                 </button>
                 ${metadato.bbox ? `
-                    <button class="boton-accion" onclick="enfocarEnMapa(${JSON.stringify(metadato.bbox)})">
+                    <button class="boton-accion" onclick="enfocarEnMapa(${bboxJson})" title="Enfocar extensión en el visor">
                         Ver En Mapa
+                    </button>
+                ` : ''}
+                ${urlWms ? `
+                    <button class="boton-accion boton-destacado" onclick="previsualizarCapaWms('${urlWms}', '${tituloEscapado}', ${bboxJson})" title="Cargar capa WMS en el mapa">
+                        Previsualizar Capa
                     </button>
                 ` : ''}
             </div>
